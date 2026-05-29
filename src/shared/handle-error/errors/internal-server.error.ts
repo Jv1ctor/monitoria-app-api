@@ -1,0 +1,8 @@
+import { ApiError } from '../api-error.js';
+import type { ParameterErrorType } from '../types/parameter-error.type.js';
+
+export class InternalServerError extends ApiError {
+  constructor({ message }: ParameterErrorType) {
+    super(message, 500, 'INTERNAL_SERVER');
+  }
+}

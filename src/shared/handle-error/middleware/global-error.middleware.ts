@@ -1,5 +1,7 @@
 import type { Request, Response } from 'express';
 
+import { logger } from '@/shared/logger';
+
 import { ApiError } from '../api-error';
 
 export const globalErrorMiddleware = (
@@ -18,7 +20,8 @@ export const globalErrorMiddleware = (
     return;
   }
 
+  logger.error((error as Error).message);
   response
-    .status(50)
+    .status(500)
     .json({ code_error: 'INTERNAL_SERVER', error: 'Internal Server Error' });
 };
