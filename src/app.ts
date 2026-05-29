@@ -22,10 +22,11 @@ app.use(
 app.use(express.json());
 app.use(express.urlencoded({ extended: true, limit: '5mb' }));
 
+app.use('/api/v1/docs', swaggerUi.serve, swaggerUi.setup(generateOpenAPI()));
 // definir rotas
-app.use('/api/v1', () => {});
-
-app.use('api/v1/docs', swaggerUi.serve, swaggerUi.setup(generateOpenAPI()));
+app.use('/api/v1', (_request, response) => {
+  response.json({ ping: 'pong' });
+});
 
 app.use(notFoundErrorMiddleware);
 app.use(globalErrorMiddleware);

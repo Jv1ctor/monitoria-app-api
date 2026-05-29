@@ -1,7 +1,11 @@
 import {
+  extendZodWithOpenApi,
   OpenApiGeneratorV3,
   OpenAPIRegistry,
 } from '@asteasolutions/zod-to-openapi';
+import z from 'zod';
+
+extendZodWithOpenApi(z);
 
 export const registry = new OpenAPIRegistry();
 
@@ -19,7 +23,7 @@ export const generateOpenAPI = () => {
 
     servers: [
       {
-        url: 'http://localhost:3333',
+        url: 'http://localhost:3000',
       },
     ],
   });
