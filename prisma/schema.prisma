@@ -12,21 +12,172 @@ datasource db {
   provider = "postgresql"
 }
 
-
 // Example
 
-model User { 
-  id    Int     @id @default(autoincrement()) 
-  email String  @unique
-  name  String?
-  posts Post[]
-} 
+enum Role {
+  STUDENT
+  MONITOR
+}
 
-model Post { 
-  id        Int     @id @default(autoincrement()) 
-  title     String
-  content   String?
-  published Boolean @default(false) 
-  author    User    @relation(fields: [authorId], references: [id]) 
-  authorId  Int
-} 
+model Admin {
+  id           Int      @id @default(autoincrement())
+  registration String   @unique
+  password     String
+  email        String   @unique
+  first_name   String
+  last_name    String
+  created_at   DateTime @default(now())
+}
+
+model User {
+  id               Int          @id @default(autoincrement())
+  registration     String       @unique
+  password         String
+  email            String       @unique
+  first_name       String
+  last_name        String
+  created_at       DateTime     @default(now())
+  role             Role         @default(STUDENT)
+  major_id         Int
+  major            Major        @relation(fields: [major_id], references: [id])
+  givenRatings     Rating[]     @relation("StudentRating")
+  greceivedRatings Rating[]     @relation("MonitorRating")
+  classes          Class[]
+  lessonUsers      LessonUser[]
+  frequencys       Frequencys[]
+  topics           Topics[]
+  messages         Message[]
+}
+
+model Major {
+  id         Int       @id @default(autoincrement())
+  name       String
+  users      User[]
+  subjects   Subject[]
+  created_at DateTime  @default(now())
+}
+
+model Subject {
+  id         Int      @id @default(autoincrement())
+  code       String   @unique
+  name       String
+  major_id   Int
+  major      Major    @relation(fields: [major_id], references: [id])
+  classes    Class[]
+  created_at DateTime @default(now())
+}
+
+model Rating {
+  id         Int      @id @default(autoincrement())
+  rate       Int
+  student_id Int
+  monitor_id Int
+  created_at DateTime @default(now())
+
+  student User @relation("StudentRating", fields: [student_id], references: [id])
+  monitor User @relation("MonitorRating", fields: [monitor_id], references: [id])
+
+  @@unique([student_id, monitor_id])
+  @@index([student_id])
+  @@index([monitor_id])
+}
+
+model Class {
+  id          Int          @id @default(autoincrement())
+  code        String       @unique
+  monitor_id  Int
+  subject_id  Int
+  monitor     User         @relation(fields: [monitor_id], references: [id])
+  subject     Subject      @relation(fields: [subject_id], references: [id])
+  created_at  DateTime     @default(now())
+  documents   Documents[]
+  lessons     Lesson[]
+  lessonUsers LessonUser[]
+  topics      Topics[]
+
+  @@unique([monitor_id, code])
+  @@index([subject_id])
+  @@index([monitor_id])
+}
+
+model Documents {
+  id          Int      @id @default(autoincrement())
+  description String?
+  key         String   @unique
+  filename    String
+  mime_type   String
+  size        Float
+  created_at  DateTime @default(now())
+  class_id    Int
+  class       Class    @relation(fields: [class_id], references: [id])
+}
+
+enum Modality {
+  INPERSON
+  REMOTE
+}
+
+model Lesson {
+  id          Int          @id @default(autoincrement())
+  modality    Modality     @default(REMOTE)
+  date_time   DateTime
+  description String?
+  created_at  DateTime     @default(now())
+  class_id    Int
+  class       Class        @relation(fields: [class_id], references: [id])
+  frequencys  Frequencys[]
+}
+
+model LessonUser {
+  id         Int   @id @default(autoincrement())
+  class_id   Int
+  student_id Int
+  class      Class @relation(fields: [class_id], references: [id])
+  student    User  @relation(fields: [student_id], references: [id])
+}
+
+enum Status {
+  PENDING
+  FINISHED
+}
+
+model Frequencys {
+  id         Int      @id @default(autoincrement())
+  status     Status   @default(PENDING)
+  value      Boolean  @default(false)
+  student_id Int
+  lesson_id  Int
+  created_at DateTime @default(now())
+
+  student User   @relation(fields: [student_id], references: [id])
+  lesson  Lesson @relation(fields: [lesson_id], references: [id])
+
+  @@unique([student_id, lesson_id])
+  @@index([student_id, lesson_id])
+}
+
+model Topics {
+  id          Int      @id @default(autoincrement())
+  title       String
+  description String
+  created_at  DateTime @default(now())
+
+  class_id Int
+  user_id  Int
+
+  class    Class     @relation(fields: [class_id], references: [id])
+  user     User      @relation(fields: [user_id], references: [id])
+  messages Message[]
+}
+
+model Message {
+  id       Int    @id @default(autoincrement())
+  user_id  Int
+  topic_id Int
+  content  String
+
+  topics Topics @relation(fields: [topic_id], references: [id])
+  user   User   @relation(fields: [user_id], references: [id])
+
+  created_at DateTime @default(now())
+}

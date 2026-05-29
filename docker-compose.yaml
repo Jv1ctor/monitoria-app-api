@@ -1,0 +1,18 @@
+services:
+  db:
+    container_name: monitor-db
+    image: postgres:16-alpine
+    restart: always
+    env_file:
+      - ./.env
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASS}
+      POSTGRES_DB: ${DB_NAME}
+    ports:
+      - ${DB_PORT_PUBLIC}:5432
+    volumes:
+      - monitor-db-data:/var/lib/postgresql/data
+
+volumes:
+  monitor-db-data:
