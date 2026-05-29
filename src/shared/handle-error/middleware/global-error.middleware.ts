@@ -1,4 +1,4 @@
-import type { Request, Response } from 'express';
+import type { NextFunction, Request, Response } from 'express';
 
 import { logger } from '@/shared/logger';
 
@@ -8,6 +8,7 @@ export const globalErrorMiddleware = (
   error: unknown,
   _request: Request,
   response: Response,
+  _next: NextFunction,
 ) => {
   if (error instanceof ApiError) {
     const statusCode = error.statusCode;
