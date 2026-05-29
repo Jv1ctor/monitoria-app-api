@@ -16,9 +16,9 @@ export const generateOpenAPI = () => {
     openapi: '3.0.0',
 
     info: {
-      title: 'Minha API',
+      title: 'Monitor API',
       version: '1.0.0',
-      description: 'API com Express + Zod + Swagger',
+      description: 'API da aplicação de monitoria',
     },
 
     servers: [
