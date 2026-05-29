@@ -3,7 +3,9 @@ import 'dotenv/config';
 import cors from 'cors';
 import express from 'express';
 import helmet from 'helmet';
+import swaggerUi from 'swagger-ui-express';
 
+import { generateOpenAPI } from './shared/docs/swagger';
 import { globalErrorMiddleware } from './shared/handle-error/middleware/global-error.middleware';
 import { notFoundErrorMiddleware } from './shared/handle-error/middleware/not-found-error.middleware';
 import { loggerHttp } from './shared/logger';
@@ -22,6 +24,8 @@ app.use(express.urlencoded({ extended: true, limit: '5mb' }));
 
 // definir rotas
 app.use('/api/v1', () => {});
+
+app.use('api/v1/docs', swaggerUi.serve, swaggerUi.setup(generateOpenAPI()));
 
 app.use(notFoundErrorMiddleware);
 app.use(globalErrorMiddleware);
