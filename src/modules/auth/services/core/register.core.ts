@@ -2,6 +2,7 @@ import bcrypt from 'bcrypt';
 
 import type { MajorRepositoryPort } from '@/modules/major/interfaces/major-repository.port';
 import type { UserRepositoryPort } from '@/modules/user/interfaces/user-repository.port';
+import { ConflictError } from '@/shared/handle-error/errors/conflict.error';
 import { NotFoundError } from '@/shared/handle-error/errors/not-found.error';
 
 import { RegisterUserRequestDto } from '../../dto/request/register-user-request.dto';
@@ -12,10 +13,21 @@ export const register =
   async (data: RegisterUserRequestDto): Promise<RegisterUserResponseDto> => {
     const { userRepo, majorRepo } = deps;
 
-    const major = await majorRepo.findById(data.major_id);
+    const existRegistration = await userRepo.findByRegistration(
+      data.registration,
+    );
+    if (existRegistration) {
+      throw new ConflictError({ message: 'Matrícula já cadastrada' });
+    }
 
+    const existEmail = await userRepo.findByEmail(data.email);
+    if (existEmail) {
+      throw new ConflictError({ message: 'Email já cadastrada' });
+    }
+
+    const major = await majorRepo.findById(data.major_id);
     if (!major) {
-      throw new NotFoundError({ message: 'not found major' });
+      throw new NotFoundError({ message: 'Não foi possivel encontrar curso' });
     }
 
     const salt = await bcrypt.genSalt(10);
