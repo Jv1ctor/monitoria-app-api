@@ -1,13 +1,14 @@
+import '@/modules/auth/docs/openapi';
+
 import {
   extendZodWithOpenApi,
   OpenApiGeneratorV3,
-  OpenAPIRegistry,
 } from '@asteasolutions/zod-to-openapi';
 import z from 'zod';
 
-extendZodWithOpenApi(z);
+import { registry } from './registry';
 
-export const registry = new OpenAPIRegistry();
+extendZodWithOpenApi(z);
 
 export const generateOpenAPI = () => {
   const generator = new OpenApiGeneratorV3(registry.definitions);
@@ -23,7 +24,7 @@ export const generateOpenAPI = () => {
 
     servers: [
       {
-        url: 'http://localhost:3000',
+        url: 'http://localhost:3000/api/v1/',
       },
     ],
   });
