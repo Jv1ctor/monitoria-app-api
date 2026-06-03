@@ -5,7 +5,7 @@ export const notFoundErrorMiddleware = (
   response: Response,
 ) => {
   response.status(404).json({
-    error: 'endpoint not found',
+    message: 'endpoint not found',
     code_error: 'NOT_FOUND',
   });
 };

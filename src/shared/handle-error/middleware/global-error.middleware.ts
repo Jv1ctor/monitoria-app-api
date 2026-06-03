@@ -15,15 +15,18 @@ export const globalErrorMiddleware = (
     const statusCode = error.statusCode;
     const codeError = error.codeError;
     const messageError = error.message;
+    const validationError = error.validationError;
 
-    response
-      .status(statusCode as number)
-      .json({ code_error: codeError, error: messageError });
+    response.status(statusCode as number).json({
+      code_error: codeError,
+      message: messageError,
+      errors: validationError,
+    });
     return;
   }
 
   logger.error((error as Error).message);
   response
     .status(500)
-    .json({ code_error: 'INTERNAL_SERVER', error: 'Internal Server Error' });
+    .json({ code_error: 'INTERNAL_SERVER', message: 'Internal Server Error' });
 };
