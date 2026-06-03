@@ -7,13 +7,8 @@ export const RecoverUserRequestDto = z.object({
   email: z
     .string()
     .min(1, 'E-mail e obrigatorio')
-    .email('Insira um e-mail institucional valido')
-    .refine(
-      email => email.endsWith('@edu.unifor.br') || email.endsWith('@unifor.br'),
-      {
-        message: 'Utilize seu e-mail da Unifor (@edu.unifor.br)',
-      },
-    ),
+    .email('Insira um e-mail valido')
+    .openapi({ example: 'example@example.com' }),
 });
 
 export type RecoverUserRequestDto = z.infer<typeof RecoverUserRequestDto>;

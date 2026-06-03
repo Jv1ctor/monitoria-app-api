@@ -8,21 +8,26 @@ export const RegisterUserRequestDto = z.object({
     .string()
     .regex(/^\d{7}$/, 'A matricula deve conter 7 numeros')
     .nonempty()
-    .nonoptional(),
-  password: z.string().min(6, 'A senha deve ter pelo menos 6 caracteres'),
+    .nonoptional()
+    .openapi({ example: '1234567' }),
+  password: z
+    .string()
+    .min(6, 'A senha deve ter pelo menos 6 caracteres')
+    .openapi({ example: 'senha123' }),
   email: z
     .string()
     .min(1, 'E-mail e obrigatorio')
-    .email('Insira um e-mail institucional valido')
-    .refine(
-      email => email.endsWith('@edu.unifor.br') || email.endsWith('@unifor.br'),
-      {
-        message: 'Utilize seu e-mail da Unifor (@edu.unifor.br)',
-      },
-    ),
-  first_name: z.string().min(1, 'Primeiro nome e obrigatorio'),
-  last_name: z.string().min(1, 'Sobrenome e obrigatorio'),
-  major_id: z.number().int().positive('Curso invalido'),
+    .email('Insira um e-mail valido')
+    .openapi({ example: 'example@example.com' }),
+  first_name: z
+    .string()
+    .min(1, 'Primeiro nome e obrigatorio')
+    .openapi({ example: 'lucas' }),
+  last_name: z
+    .string()
+    .min(1, 'Sobrenome e obrigatorio')
+    .openapi({ example: 'silva' }),
+  major_id: z.number().int().positive('Curso invalido').openapi({ example: 1 }),
 });
 
 export type RegisterUserRequestDto = z.infer<typeof RegisterUserRequestDto>;
