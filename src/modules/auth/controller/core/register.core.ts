@@ -15,7 +15,7 @@ export const register =
       await RegisterUserRequestDto.safeParseAsync(body);
 
     if (!success) {
-      throw new BadRequestError({ message: error.message });
+      throw new BadRequestError({ message: 'validation error', error });
     }
 
     const result = await authService.register(data);

@@ -15,7 +15,7 @@ export const login =
       await LoginUserRequestDto.safeParseAsync(body);
 
     if (!success) {
-      throw new BadRequestError({ message: error.message });
+      throw new BadRequestError({ message: 'validation error', error });
     }
 
     const result = await authService.login(data);
