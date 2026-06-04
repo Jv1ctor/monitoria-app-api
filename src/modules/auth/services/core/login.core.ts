@@ -4,6 +4,7 @@ import type { UserRepositoryPort } from '@/modules/user/interfaces/user-reposito
 import { BadRequestError } from '@/shared/handle-error/errors/bad-request.error';
 import { signJwt } from '@/shared/jwt';
 
+import type { PayloadJwtDto } from '../../dto/payload-jwt.dto';
 import { LoginUserRequestDto } from '../../dto/request/login-user-request.dto';
 import type { LoginUserResponseDto } from '../../dto/response/login-user-response.dto';
 
@@ -24,9 +25,10 @@ export const login =
       throw new BadRequestError({ message: 'wrong credentials' });
     }
 
-    const token = signJwt({
+    const token = signJwt<PayloadJwtDto>({
       user_id: user.id,
-      role: [user.role],
+      role: user.role,
+      name: user.first_name,
     });
 
     return {
