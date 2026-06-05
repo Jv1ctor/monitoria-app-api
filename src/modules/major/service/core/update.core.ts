@@ -12,7 +12,7 @@ export const update =
     const existingMajor = await repository.findById(id);
 
     if (!existingMajor) {
-      throw new NotFoundError({ message: 'not found major' });
+      throw new NotFoundError({ message: 'curso nao encontrado' });
     }
 
     const major = await repository.update(id, {

@@ -1,3 +1,5 @@
+import type { AcademicProfileRepositoryPort } from '@/modules/student/interfaces/academic-profile-repository.port';
+
 import type { MajorRepositoryPort } from '../interfaces/major-repository.port';
 import type { MajorServicePort } from '../interfaces/major-service.port';
 import { create } from './core/create.core';
@@ -7,11 +9,12 @@ import { remove } from './core/remove.core';
 import { update } from './core/update.core';
 
 export const majorService = (
-  repository: MajorRepositoryPort,
+  majorRepo: MajorRepositoryPort,
+  profileRepo: AcademicProfileRepositoryPort,
 ): MajorServicePort => ({
-  create: create({ repository }),
-  findAll: findAll({ repository }),
-  findById: findById({ repository }),
-  remove: remove({ repository }),
-  update: update({ repository }),
+  create: create({ repository: majorRepo }),
+  findAll: findAll({ repository: majorRepo }),
+  findById: findById({ repository: majorRepo }),
+  remove: remove({ majorRepo, profileRepo }),
+  update: update({ repository: majorRepo }),
 });

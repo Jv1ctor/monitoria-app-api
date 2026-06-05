@@ -6,4 +6,5 @@ export type MajorRepositoryPort = {
   findAll: () => Promise<Major[]>;
   update: (id: number, data: Prisma.MajorUpdateInput) => Promise<Major>;
   remove: (id: number) => Promise<Major>;
+  existRelation: (id: number) => Promise<boolean>;
 };

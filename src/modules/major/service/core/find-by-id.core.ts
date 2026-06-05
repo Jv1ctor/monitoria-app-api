@@ -11,7 +11,7 @@ export const findById =
     const major = await repository.findById(id);
 
     if (!major) {
-      throw new NotFoundError({ message: 'not found major' });
+      throw new NotFoundError({ message: 'curso nao encontrado' });
     }
 
     return {
