@@ -6,6 +6,7 @@ import { ApiErrorResponseSchema } from '@/shared/docs/schemas/api-error.schema';
 
 import { CreateMajorDto } from '../dto/create-major.dto';
 import { MajorIdParameterDto } from '../dto/major-id-params.dto';
+import { MajorNameQueryDto } from '../dto/major-name-query.dto';
 import { MajorResponseDto } from '../dto/major-response.dto';
 import { UpdateMajorDto } from '../dto/update-major.dto';
 
@@ -26,6 +27,11 @@ const MajorIdParameterSchema = registry.register(
   MajorIdParameterDto,
 );
 
+const MajorNameQuerySchema = registry.register(
+  'MajorNameQueryDto',
+  MajorNameQueryDto,
+);
+
 const MajorResponseSchema = registry.register(
   'MajorResponseDto',
   MajorResponseDto,
@@ -42,6 +48,11 @@ registry.registerPath({
   tags: ['Major'],
   summary: 'Create major',
   description: 'Creates a new major.',
+  security: [
+    {
+      bearerAuth: [],
+    },
+  ],
   request: {
     body: {
       content: {
@@ -91,6 +102,43 @@ registry.registerPath({
 
 registry.registerPath({
   method: 'get',
+  path: '/major/by-name',
+  tags: ['Major'],
+  summary: 'Find major by name',
+  description: 'Returns a single major by its name.',
+  request: {
+    query: MajorNameQuerySchema,
+  },
+  responses: {
+    200: {
+      description: 'Major returned successfully.',
+      content: {
+        'application/json': {
+          schema: MajorResponseSchema,
+        },
+      },
+    },
+    400: {
+      description: 'Invalid parameter.',
+      content: {
+        'application/json': {
+          schema: ApiErrorResponseSchema,
+        },
+      },
+    },
+    404: {
+      description: 'Major not found.',
+      content: {
+        'application/json': {
+          schema: ApiErrorResponseSchema,
+        },
+      },
+    },
+  },
+});
+
+registry.registerPath({
+  method: 'get',
   path: '/major/{id}',
   tags: ['Major'],
   summary: 'Find major by id',
@@ -128,6 +176,11 @@ registry.registerPath({
 
 registry.registerPath({
   method: 'put',
+  security: [
+    {
+      bearerAuth: [],
+    },
+  ],
   path: '/major/{id}',
   tags: ['Major'],
   summary: 'Update major',
@@ -172,6 +225,11 @@ registry.registerPath({
 
 registry.registerPath({
   method: 'delete',
+  security: [
+    {
+      bearerAuth: [],
+    },
+  ],
   path: '/major/{id}',
   tags: ['Major'],
   summary: 'Delete major',

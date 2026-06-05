@@ -11,7 +11,7 @@ export const authorizatorMiddleware =
       throw new UnauthorizedError({ message: 'Usuário não autenticado' });
     }
 
-    if (role.includes(request.user.role)) {
+    if (!role.includes(request.user.role)) {
       throw new ForbiddenError({
         message: 'Não é possível acessar esse recurso',
       });

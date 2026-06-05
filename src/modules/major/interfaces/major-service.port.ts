@@ -5,6 +5,7 @@ import type { UpdateMajorDto } from '../dto/update-major.dto';
 export type MajorServicePort = {
   create(input: CreateMajorDto): Promise<MajorDto>;
   findById(id: number): Promise<MajorDto>;
+  findByName(name: string): Promise<MajorDto>;
   findAll(): Promise<MajorDto[]>;
   update(id: number, input: UpdateMajorDto): Promise<MajorDto>;
   remove(id: number): Promise<MajorDto>;

@@ -48,7 +48,7 @@ model AcademicProfile {
 
 model Major {
   id               Int               @id @default(autoincrement())
-  name             String
+  name             String            @unique()
   subjects         Subject[]
   created_at       DateTime          @default(now())
   academicProfiles AcademicProfile[]
