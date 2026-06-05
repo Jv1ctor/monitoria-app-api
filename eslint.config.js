@@ -7,7 +7,7 @@ import simpleImportSort from 'eslint-plugin-simple-import-sort';
 
 export default tseslint.config(
   {
-    ignores: ['**/generated/**', 'prisma.config.ts'],
+    ignores: ['**/generated/**', 'prisma.config.ts', 'prisma/**/*.ts'],
   },
   eslint.configs.recommended,
   ...tseslint.configs.recommended,
