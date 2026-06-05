@@ -16,13 +16,13 @@ export const login =
     const user = await userRepo.findByRegistration(data.registration);
 
     if (!user) {
-      throw new BadRequestError({ message: 'wrong credentials' });
+      throw new BadRequestError({ message: 'Crednciais Inválidas' });
     }
 
     const compareResult = await bcrypt.compare(data.password, user.password);
 
     if (!compareResult) {
-      throw new BadRequestError({ message: 'wrong credentials' });
+      throw new BadRequestError({ message: 'Credenciais Inválidas' });
     }
 
     const token = signJwt<PayloadJwtDto>({

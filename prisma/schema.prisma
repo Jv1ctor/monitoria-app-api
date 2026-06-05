@@ -12,34 +12,31 @@ datasource db {
   provider = "postgresql"
 }
 
-// Example
-
 enum Role {
   STUDENT
   MONITOR
-}
-
-model Admin {
-  id           Int      @id @default(autoincrement())
-  registration String   @unique
-  password     String
-  email        String   @unique
-  first_name   String
-  last_name    String
-  created_at   DateTime @default(now())
+  ADMIN
 }
 
 model User {
-  id               Int          @id @default(autoincrement())
-  registration     String       @unique
+  id               Int              @id @default(autoincrement())
+  registration     String           @unique
   password         String
-  email            String       @unique
+  email            String           @unique
   first_name       String
   last_name        String
-  created_at       DateTime     @default(now())
-  role             Role         @default(STUDENT)
-  major_id         Int
-  major            Major        @relation(fields: [major_id], references: [id])
+  created_at       DateTime         @default(now())
+  role             Role             @default(STUDENT)
+  academicProfiles AcademicProfile?
+}
+
+model AcademicProfile {
+  user_id Int @id
+
+  major_id Int
+  major    Major @relation(fields: [major_id], references: [id])
+
+  user             User         @relation(fields: [user_id], references: [id])
   givenRatings     Rating[]     @relation("StudentRating")
   greceivedRatings Rating[]     @relation("MonitorRating")
   classes          Class[]
@@ -50,11 +47,11 @@ model User {
 }
 
 model Major {
-  id         Int       @id @default(autoincrement())
-  name       String
-  users      User[]
-  subjects   Subject[]
-  created_at DateTime  @default(now())
+  id               Int               @id @default(autoincrement())
+  name             String
+  subjects         Subject[]
+  created_at       DateTime          @default(now())
+  academicProfiles AcademicProfile[]
 }
 
 model Subject {
@@ -74,8 +71,8 @@ model Rating {
   monitor_id Int
   created_at DateTime @default(now())
 
-  student User @relation("StudentRating", fields: [student_id], references: [id])
-  monitor User @relation("MonitorRating", fields: [monitor_id], references: [id])
+  student AcademicProfile @relation("StudentRating", fields: [student_id], references: [user_id])
+  monitor AcademicProfile @relation("MonitorRating", fields: [monitor_id], references: [user_id])
 
   @@unique([student_id, monitor_id])
   @@index([student_id])
@@ -83,13 +80,13 @@ model Rating {
 }
 
 model Class {
-  id          Int          @id @default(autoincrement())
-  code        String       @unique
+  id          Int             @id @default(autoincrement())
+  code        String          @unique
   monitor_id  Int
   subject_id  Int
-  monitor     User         @relation(fields: [monitor_id], references: [id])
-  subject     Subject      @relation(fields: [subject_id], references: [id])
-  created_at  DateTime     @default(now())
+  monitor     AcademicProfile @relation(fields: [monitor_id], references: [user_id])
+  subject     Subject         @relation(fields: [subject_id], references: [id])
+  created_at  DateTime        @default(now())
   documents   Documents[]
   lessons     Lesson[]
   lessonUsers LessonUser[]
@@ -129,11 +126,11 @@ model Lesson {
 }
 
 model LessonUser {
-  id         Int   @id @default(autoincrement())
+  id         Int             @id @default(autoincrement())
   class_id   Int
   student_id Int
-  class      Class @relation(fields: [class_id], references: [id])
-  student    User  @relation(fields: [student_id], references: [id])
+  class      Class           @relation(fields: [class_id], references: [id])
+  student    AcademicProfile @relation(fields: [student_id], references: [user_id])
 }
 
 enum Status {
@@ -149,8 +146,8 @@ model Frequencys {
   lesson_id  Int
   created_at DateTime @default(now())
 
-  student User   @relation(fields: [student_id], references: [id])
-  lesson  Lesson @relation(fields: [lesson_id], references: [id])
+  student AcademicProfile @relation(fields: [student_id], references: [user_id])
+  lesson  Lesson          @relation(fields: [lesson_id], references: [id])
 
   @@unique([student_id, lesson_id])
   @@index([student_id, lesson_id])
@@ -165,8 +162,8 @@ model Topics {
   class_id Int
   user_id  Int
 
-  class    Class     @relation(fields: [class_id], references: [id])
-  user     User      @relation(fields: [user_id], references: [id])
+  class    Class           @relation(fields: [class_id], references: [id])
+  user     AcademicProfile @relation(fields: [user_id], references: [user_id])
   messages Message[]
 }
 
@@ -176,8 +173,8 @@ model Message {
   topic_id Int
   content  String
 
-  topics Topics @relation(fields: [topic_id], references: [id])
-  user   User   @relation(fields: [user_id], references: [id])
+  topics Topics          @relation(fields: [topic_id], references: [id])
+  user   AcademicProfile @relation(fields: [user_id], references: [user_id])
 
   created_at DateTime @default(now())
 }
