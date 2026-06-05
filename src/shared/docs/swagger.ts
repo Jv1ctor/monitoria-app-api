@@ -1,5 +1,7 @@
 import '@/modules/auth/docs/openapi';
+import '@/modules/class/docs/openapi';
 import '@/modules/major/docs/openapi';
+import '@/modules/subject/docs/openapi';
 
 import {
   extendZodWithOpenApi,
