@@ -1,4 +1,4 @@
-import type { AcademicProfileRepositoryPort } from '@/modules/student/interfaces/academic-profile-repository.port';
+import type { AcademicProfileRepositoryPort } from '@/modules/user/interfaces/academic-profile-repository.port';
 import { ConflictError } from '@/shared/handle-error/errors/conflict.error';
 import { NotFoundError } from '@/shared/handle-error/errors/not-found.error';
 
