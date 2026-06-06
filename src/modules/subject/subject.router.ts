@@ -3,7 +3,8 @@ import { Router } from 'express';
 import { authenticatorMiddleware } from '../auth/middleware/authenticator.middleware';
 import { authorizatorMiddleware } from '../auth/middleware/authorizator.middleawre';
 import { classRepository } from '../class/repository';
-import { userRepository } from '../user/repository';
+import { majorRepository } from '../major/repository';
+import { userRepository } from '../user/repository/user';
 import { subjectController } from './controller';
 import { subjectRepository } from './repository';
 import { subjectService } from './service';
@@ -11,9 +12,11 @@ import { subjectService } from './service';
 export const subjectRouter = Router();
 
 const userRepo = userRepository;
-const repository = subjectRepository;
-const classRepo = classRepository;
-const service = subjectService(repository, classRepo);
+const service = subjectService({
+  classRepo: classRepository,
+  majorRepo: majorRepository,
+  subjectRepo: subjectRepository,
+});
 const authenticator = authenticatorMiddleware({ userRepo });
 
 const controller = subjectController({

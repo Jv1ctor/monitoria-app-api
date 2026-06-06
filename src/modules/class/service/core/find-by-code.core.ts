@@ -4,11 +4,11 @@ import type { ClassDto } from '../../dto/class.dto';
 import type { ClassRepositoryPort } from '../../interfaces/class-repository.port';
 
 export const findByCode =
-  (deps: { repository: ClassRepositoryPort }) =>
+  (deps: { classRepo: ClassRepositoryPort }) =>
   async (code: string): Promise<ClassDto> => {
-    const { repository } = deps;
+    const { classRepo } = deps;
 
-    const classEntity = await repository.findByCode(code);
+    const classEntity = await classRepo.findByCode(code);
 
     if (!classEntity) {
       throw new NotFoundError({ message: 'turma nao encontrada' });

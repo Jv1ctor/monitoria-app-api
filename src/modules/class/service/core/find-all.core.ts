@@ -2,11 +2,11 @@ import type { ClassDto } from '../../dto/class.dto';
 import type { ClassRepositoryPort } from '../../interfaces/class-repository.port';
 
 export const findAll =
-  (deps: { repository: ClassRepositoryPort }) =>
+  (deps: { classRepo: ClassRepositoryPort }) =>
   async (): Promise<ClassDto[]> => {
-    const { repository } = deps;
+    const { classRepo } = deps;
 
-    const classes = await repository.findAll();
+    const classes = await classRepo.findAll();
 
     return classes.map(classEntity => ({
       id: classEntity.id,

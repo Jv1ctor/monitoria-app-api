@@ -2,8 +2,8 @@ import { Router } from 'express';
 
 import { authenticatorMiddleware } from '../auth/middleware/authenticator.middleware';
 import { authorizatorMiddleware } from '../auth/middleware/authorizator.middleawre';
-import { academicProfileRepository } from '../student/repository';
-import { userRepository } from '../user/repository';
+import { academicProfileRepository } from '../user/repository/academic-profile';
+import { userRepository } from '../user/repository/user';
 import { majorController } from './controller';
 import { majorRepository } from './repository';
 import { majorService } from './service';

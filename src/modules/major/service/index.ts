@@ -1,4 +1,4 @@
-import type { AcademicProfileRepositoryPort } from '@/modules/student/interfaces/academic-profile-repository.port';
+import type { AcademicProfileRepositoryPort } from '@/modules/user/interfaces/academic-profile-repository.port';
 
 import type { MajorRepositoryPort } from '../interfaces/major-repository.port';
 import type { MajorServicePort } from '../interfaces/major-service.port';

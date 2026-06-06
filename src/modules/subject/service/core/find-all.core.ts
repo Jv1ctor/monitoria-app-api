@@ -2,11 +2,11 @@ import type { SubjectDto } from '../../dto/subject.dto';
 import type { SubjectRepositoryPort } from '../../interfaces/subject-repository.port';
 
 export const findAll =
-  (deps: { repository: SubjectRepositoryPort }) =>
+  (deps: { subjectRepo: SubjectRepositoryPort }) =>
   async (): Promise<SubjectDto[]> => {
-    const { repository } = deps;
+    const { subjectRepo } = deps;
 
-    const subjects = await repository.findAll();
+    const subjects = await subjectRepo.findAll();
 
     return subjects.map(subject => ({
       id: subject.id,

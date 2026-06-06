@@ -4,8 +4,8 @@ import type { UserRepositoryPort } from '@/modules/user/interfaces/user-reposito
 import { ConflictError } from '@/shared/handle-error/errors/conflict.error';
 import { NotFoundError } from '@/shared/handle-error/errors/not-found.error';
 
+import type { AcademicProfileRepositoryPort } from '../../../user/interfaces/academic-profile-repository.port';
 import type { RegisterStudantDto } from '../../dto/register-student.dto';
-import type { AcademicProfileRepositoryPort } from '../../interfaces/academic-profile-repository.port';
 
 export const register =
   (deps: {

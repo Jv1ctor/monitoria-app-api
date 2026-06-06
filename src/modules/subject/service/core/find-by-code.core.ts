@@ -4,11 +4,11 @@ import type { SubjectDto } from '../../dto/subject.dto';
 import type { SubjectRepositoryPort } from '../../interfaces/subject-repository.port';
 
 export const findByCode =
-  (deps: { repository: SubjectRepositoryPort }) =>
+  (deps: { subjectRepo: SubjectRepositoryPort }) =>
   async (code: string): Promise<SubjectDto> => {
-    const { repository } = deps;
+    const { subjectRepo } = deps;
 
-    const subject = await repository.findByCode(code);
+    const subject = await subjectRepo.findByCode(code);
 
     if (!subject) {
       throw new NotFoundError({ message: 'disciplina nao encontrada' });

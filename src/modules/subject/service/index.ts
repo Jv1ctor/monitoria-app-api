@@ -1,4 +1,5 @@
 import type { ClassRepositoryPort } from '@/modules/class/interfaces/class-repository.port';
+import type { MajorRepositoryPort } from '@/modules/major/interfaces/major-repository.port';
 
 import type { SubjectRepositoryPort } from '../interfaces/subject-repository.port';
 import type { SubjectServicePort } from '../interfaces/subject-service.port';
@@ -9,14 +10,15 @@ import { findById } from './core/find-by-id.core';
 import { remove } from './core/remove.core';
 import { update } from './core/update.core';
 
-export const subjectService = (
-  subjectRepo: SubjectRepositoryPort,
-  classRepo: ClassRepositoryPort,
-): SubjectServicePort => ({
-  create: create({ repository: subjectRepo }),
-  findAll: findAll({ repository: subjectRepo }),
-  findById: findById({ repository: subjectRepo }),
-  findByCode: findByCode({ repository: subjectRepo }),
-  update: update({ repository: subjectRepo }),
-  remove: remove({ subjectRepo, classRepo }),
+export const subjectService = (deps: {
+  subjectRepo: SubjectRepositoryPort;
+  classRepo: ClassRepositoryPort;
+  majorRepo: MajorRepositoryPort;
+}): SubjectServicePort => ({
+  create: create(deps),
+  findAll: findAll(deps),
+  findById: findById(deps),
+  findByCode: findByCode(deps),
+  update: update(deps),
+  remove: remove(deps),
 });

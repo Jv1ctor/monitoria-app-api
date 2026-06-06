@@ -1,9 +1,9 @@
 import { Router } from 'express';
 
 import { majorRepository } from '../major/repository';
-import { academicProfileRepository } from '../student/repository';
 import { studentService } from '../student/service';
-import { userRepository } from '../user/repository';
+import { academicProfileRepository } from '../user/repository/academic-profile';
+import { userRepository } from '../user/repository/user';
 import { authController } from './controller';
 import { authService } from './services';
 
