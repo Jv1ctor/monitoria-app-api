@@ -1,4 +1,4 @@
-import type { LessonRepositoryPort } from '../interfaces/lesson-repository.port';
+import type { LessonRepositoryPort } from '../../interfaces/lesson-repository.port';
 import { create } from './core/create.core';
 import { findAll } from './core/find-all.core';
 import { findByClassId } from './core/find-by-class-id.core';

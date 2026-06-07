@@ -2,9 +2,11 @@ import type { RequestHandler } from 'express';
 
 import type { LessonServicePort } from '../interfaces/lesson-service.port';
 import { create } from './core/create.core';
+import { enroll } from './core/enroll.core';
 import { findAll } from './core/find-all.core';
 import { findByClassId } from './core/find-by-class-id.core';
 import { findById } from './core/find-by-id.core';
+import { leave } from './core/leave.core';
 import { remove } from './core/remove.core';
 import { update } from './core/update.core';
 
@@ -15,6 +17,8 @@ type LessonController = {
   findByClassId: RequestHandler;
   update: RequestHandler;
   remove: RequestHandler;
+  enroll: RequestHandler;
+  leave: RequestHandler;
 };
 
 export const lessonController = (deps: {
@@ -26,4 +30,6 @@ export const lessonController = (deps: {
   findByClassId: findByClassId({ lessonService: deps.lessonService }),
   update: update({ lessonService: deps.lessonService }),
   remove: remove({ lessonService: deps.lessonService }),
+  enroll: enroll({ lessonService: deps.lessonService }),
+  leave: leave({ lessonService: deps.lessonService }),
 });

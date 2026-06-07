@@ -5,6 +5,7 @@ import { registry } from '@/shared/docs/registry';
 import { ApiErrorResponseSchema } from '@/shared/docs/schemas/api-error.schema';
 
 import { CreateLessonDto } from '../dto/create-lesson.dto';
+import { EnrollLessonRequestDto } from '../dto/enroll-lesson-request.dto';
 import { LessonClassQueryDto } from '../dto/lesson-class-query.dto';
 import { LessonIdParameterDto } from '../dto/lesson-id-params.dto';
 import { LessonResponseDto } from '../dto/lesson-response.dto';
@@ -40,6 +41,11 @@ const LessonResponseSchema = registry.register(
 const LessonListResponseSchema = registry.register(
   'LessonListResponseDto',
   z.array(LessonResponseSchema),
+);
+
+const EnrollLessonRequestSchema = registry.register(
+  'EnrollLessonRequestDto',
+  EnrollLessonRequestDto,
 );
 
 registry.registerPath({
@@ -268,6 +274,80 @@ registry.registerPath({
           schema: ApiErrorResponseSchema,
         },
       },
+    },
+  },
+});
+
+registry.registerPath({
+  method: 'post',
+  path: '/lesson/{id}/enroll',
+  tags: ['Lesson'],
+  summary: 'Enroll student in lesson',
+  description:
+    'Enrolls a student in a lesson, creating a LessonUser and a PENDING Frequencys. STUDENT can only enroll themselves. MONITOR/ADMIN can enroll any student.',
+  security: [{ bearerAuth: [] }],
+  request: {
+    params: LessonIdParameterSchema,
+    body: {
+      content: {
+        'application/json': { schema: EnrollLessonRequestSchema },
+      },
+    },
+  },
+  responses: {
+    201: {
+      description: 'Student enrolled successfully.',
+    },
+    400: {
+      description: 'Invalid payload or parameter.',
+      content: { 'application/json': { schema: ApiErrorResponseSchema } },
+    },
+    403: {
+      description: 'Insufficient permissions.',
+      content: { 'application/json': { schema: ApiErrorResponseSchema } },
+    },
+    404: {
+      description: 'Lesson or student not found.',
+      content: { 'application/json': { schema: ApiErrorResponseSchema } },
+    },
+    409: {
+      description: 'Student already enrolled.',
+      content: { 'application/json': { schema: ApiErrorResponseSchema } },
+    },
+  },
+});
+
+registry.registerPath({
+  method: 'delete',
+  path: '/lesson/{id}/enroll',
+  tags: ['Lesson'],
+  summary: 'Unenroll student from lesson',
+  description:
+    'Removes the LessonUser, keeping the Frequencys as historical record (unbound_at stays null).',
+  security: [{ bearerAuth: [] }],
+  request: {
+    params: LessonIdParameterSchema,
+    body: {
+      content: {
+        'application/json': { schema: EnrollLessonRequestSchema },
+      },
+    },
+  },
+  responses: {
+    200: {
+      description: 'Student unenrolled successfully.',
+    },
+    400: {
+      description: 'Invalid payload or parameter.',
+      content: { 'application/json': { schema: ApiErrorResponseSchema } },
+    },
+    403: {
+      description: 'Insufficient permissions.',
+      content: { 'application/json': { schema: ApiErrorResponseSchema } },
+    },
+    404: {
+      description: 'Lesson or enrollment not found.',
+      content: { 'application/json': { schema: ApiErrorResponseSchema } },
     },
   },
 });
