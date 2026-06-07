@@ -139,12 +139,13 @@ enum Status {
 }
 
 model Frequencys {
-  id         Int      @id @default(autoincrement())
-  status     Status   @default(PENDING)
-  value      Boolean  @default(false)
+  id         Int       @id @default(autoincrement())
+  status     Status    @default(PENDING)
+  value      Boolean   @default(false)
   student_id Int
   lesson_id  Int
-  created_at DateTime @default(now())
+  created_at DateTime  @default(now())
+  unbound_at DateTime?
 
   student AcademicProfile @relation(fields: [student_id], references: [user_id])
   lesson  Lesson          @relation(fields: [lesson_id], references: [id])
