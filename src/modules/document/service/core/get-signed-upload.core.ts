@@ -1,5 +1,7 @@
 import { randomUUID } from 'node:crypto';
 
+import type { ClassRepositoryPort } from '@/modules/class/interfaces/class-repository.port';
+import { NotFoundError } from '@/shared/handle-error/errors/not-found.error';
 import type { StorageProvider } from '@/shared/storage/storage.provider';
 
 import type { CreateUploadUrlRequestDto } from '../../dto/request/create-upload-url-request.dto';
@@ -10,14 +12,19 @@ export const getSignedUpload =
   (deps: {
     documentRepo: DocumentRepositoryPort;
     storageProvider: StorageProvider;
+    classRepo: ClassRepositoryPort;
   }) =>
   async (data: CreateUploadUrlRequestDto): Promise<GetUploadUrlResponseDto> => {
-    const { storageProvider, documentRepo } = deps;
+    const { storageProvider, documentRepo, classRepo } = deps;
 
-    // TODO: fazer modulo de class
     const extension = data.file_name.split('.').pop()?.toLowerCase();
-
     const key = `uploads/${randomUUID()}.${extension}`;
+
+    const existClass = await classRepo.findById(data.class_id);
+
+    if (!existClass) {
+      throw new NotFoundError({ message: 'Turma não encontrada' });
+    }
 
     await documentRepo.create({
       filename: data.file_name,

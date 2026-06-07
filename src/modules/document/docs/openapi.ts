@@ -20,6 +20,11 @@ registry.registerPath({
   tags: ['Document'],
   summary: 'Create signed upload url',
   description: 'Creates a document record and returns a signed URL for upload.',
+  security: [
+    {
+      bearerAuth: [],
+    },
+  ],
   request: {
     body: {
       content: {
