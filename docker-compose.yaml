@@ -14,5 +14,47 @@ services:
     volumes:
       - monitor-db-data:/var/lib/postgresql/data
 
+  minio:
+    container_name: monitor-minio
+    image: minio/minio:latest
+    restart: always
+    profiles:
+      - dev
+    env_file:
+      - ./.env
+    environment:
+      MINIO_ROOT_USER: ${S3_ACCESS_KEY}
+      MINIO_ROOT_PASSWORD: ${S3_SECRET_KEY}
+    command: server /data --console-address ":9001"
+    ports:
+      - ${S3_PORT_PUBLIC}:9000
+      - ${S3_CONSOLE_PORT_PUBLIC}:9001
+    volumes:
+      - monitor-minio-data:/data
+    healthcheck:
+      test: ["CMD", "mc", "ready", "local"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  minio-bucket:
+    container_name: monitor-minio-bucket
+    image: minio/mc:latest
+    profiles:
+      - dev
+    depends_on:
+      minio:
+        condition: service_healthy
+    env_file:
+      - ./.env
+    entrypoint: >
+      /bin/sh -c "
+      mc alias set local http://minio:9000 ${S3_ACCESS_KEY} ${S3_SECRET_KEY} &&
+      mc mb --ignore-existing local/${S3_BUCKET} &&
+      mc anonymous set download local/${S3_BUCKET} &&
+      echo 'MinIO bucket ${S3_BUCKET} ready.'
+      "
+
 volumes:
   monitor-db-data:
+  monitor-minio-data:

@@ -31,3 +31,27 @@ documentRouter.post(
   authorizatorMiddleware(['MONITOR', 'ADMIN']),
   controller.createUploadUrl,
 );
+
+documentRouter.get('/', authenticator, controller.findAllByClass);
+
+documentRouter.get(
+  '/by-key/:key/download-and-preview',
+  authenticator,
+  controller.getSignedDownloadAndPreview,
+);
+
+documentRouter.get('/:id', authenticator, controller.findById);
+
+documentRouter.patch(
+  '/:id',
+  authenticator,
+  authorizatorMiddleware(['MONITOR', 'ADMIN']),
+  controller.update,
+);
+
+documentRouter.delete(
+  '/:id',
+  authenticator,
+  authorizatorMiddleware(['MONITOR', 'ADMIN']),
+  controller.remove,
+);
