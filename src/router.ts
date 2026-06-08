@@ -6,6 +6,7 @@ import { documentRouter } from './modules/document/document.router';
 import { frequencysRouter } from './modules/frequencys/frequencys.router';
 import { lessonRouter } from './modules/lesson/lesson.router';
 import { majorRouter } from './modules/major/major.router';
+import { ratingRouter } from './modules/rating/rating.router';
 import { subjectRouter } from './modules/subject/subject.router';
 
 export const router = Router();
@@ -18,3 +19,4 @@ router.use('/subject', subjectRouter);
 router.use('/class', classRouter);
 router.use('/lesson', lessonRouter);
 router.use('/frequencys', frequencysRouter);
+router.use('/rating', ratingRouter);
