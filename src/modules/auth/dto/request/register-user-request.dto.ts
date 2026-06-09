@@ -27,7 +27,11 @@ export const RegisterUserRequestDto = z.object({
     .string()
     .min(1, 'Sobrenome e obrigatorio')
     .openapi({ example: 'silva' }),
-  major_id: z.number().int().positive('Curso invalido').openapi({ example: 1 }),
+  major_name: z
+    .string()
+    .nonempty()
+    .nonoptional({ error: 'Curso invalido' })
+    .openapi({ example: 'Ciência da computação' }),
 });
 
 export type RegisterUserRequestDto = z.infer<typeof RegisterUserRequestDto>;

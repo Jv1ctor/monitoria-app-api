@@ -19,7 +19,7 @@ export const register =
       last_name: data.last_name,
       password: hashedPassword,
       registration: data.registration,
-      major_id: data.major_id,
+      major_name: data.major_name,
     });
 
     return {

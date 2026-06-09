@@ -28,7 +28,7 @@ export const register =
       throw new ConflictError({ message: 'Email já cadastrada' });
     }
 
-    const major = await majorRepo.findById(data.major_id);
+    const major = await majorRepo.findByName(data.major_name);
     if (!major) {
       throw new NotFoundError({ message: 'Não foi possivel encontrar curso' });
     }
