@@ -1,5 +1,5 @@
-import type { AcademicProfile, Role } from '@/generated/prisma/browser';
-import { prisma } from '@/shared/database/prisma';
+import type { LessonUserRepositoryPort } from '@/modules/lesson/interfaces/lesson-user-repository.port';
+import type { AcademicProfileRepositoryPort } from '@/modules/user/interfaces/academic-profile-repository.port';
 import { ConflictError } from '@/shared/handle-error/errors/conflict.error';
 import { ForbiddenError } from '@/shared/handle-error/errors/forbidden.error';
 import { NotFoundError } from '@/shared/handle-error/errors/not-found.error';
@@ -8,41 +8,17 @@ import type { RatingDto } from '../../dto/rating.dto';
 import type { CreateRatingRequestDto } from '../../dto/request/create-rating-request.dto';
 import type { RatingRepositoryPort } from '../../interfaces/rating-repository.port';
 
-const findMonitorAcademicProfile = async (
-  monitorId: number,
-  role: Role,
-): Promise<AcademicProfile | null> => {
-  return prisma.academicProfile.findUnique({
-    where: { user_id: monitorId, user: { role } },
-  });
-};
-
-const ensureStudentEnrolledInMonitorClass = async (
-  studentId: number,
-  monitorId: number,
-): Promise<void> => {
-  const enrollment = await prisma.lessonUser.findFirst({
-    where: {
-      student_id: studentId,
-      class: { monitor_id: monitorId },
-    },
-    select: { id: true },
-  });
-
-  if (!enrollment) {
-    throw new ForbiddenError({
-      message: 'Aluno não está matriculado em turma do monitor',
-    });
-  }
-};
-
 export const create =
-  (deps: { ratingRepo: RatingRepositoryPort }) =>
+  (deps: {
+    ratingRepo: RatingRepositoryPort;
+    profileRepo: AcademicProfileRepositoryPort;
+    lessonUserRepo: LessonUserRepositoryPort;
+  }) =>
   async (
     studentId: number,
     input: CreateRatingRequestDto,
   ): Promise<RatingDto> => {
-    const { ratingRepo } = deps;
+    const { ratingRepo, lessonUserRepo, profileRepo } = deps;
 
     if (studentId === input.monitor_id) {
       throw new ConflictError({
@@ -50,16 +26,24 @@ export const create =
       });
     }
 
-    const monitorProfile = await findMonitorAcademicProfile(
-      input.monitor_id,
-      'MONITOR',
-    );
+    const monitorProfile = await profileRepo.findByUserId(input.monitor_id, {
+      role: 'MONITOR',
+    });
 
     if (!monitorProfile) {
       throw new NotFoundError({ message: 'Monitor não encontrado' });
     }
 
-    await ensureStudentEnrolledInMonitorClass(studentId, input.monitor_id);
+    const enrollment = await lessonUserRepo.findStudentEnrollment(
+      studentId,
+      input.monitor_id,
+    );
+
+    if (!enrollment) {
+      throw new ForbiddenError({
+        message: 'Aluno não está matriculado em turma do monitor',
+      });
+    }
 
     const rating = await ratingRepo.upsert({
       student_id: studentId,
