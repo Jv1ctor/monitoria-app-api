@@ -5,6 +5,8 @@ import '@/modules/lesson/docs/openapi';
 import '@/modules/major/docs/openapi';
 import '@/modules/subject/docs/openapi';
 import '@/modules/frequencys/docs/openapi';
+import '@/modules/student/docs/openapi';
+import '@/modules/user/docs/openapi';
 
 import {
   extendZodWithOpenApi,
@@ -30,7 +32,7 @@ export const generateOpenAPI = () => {
 
     servers: [
       {
-        url: 'http://localhost:3000/api/v1/',
+        url: 'http://localhost:3001/api/v1/',
       },
     ],
   });
