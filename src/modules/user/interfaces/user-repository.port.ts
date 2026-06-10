@@ -1,7 +1,12 @@
-import type { Prisma, Role, User } from '@/generated/prisma/browser';
+import type { User } from '@/generated/prisma/browser';
+import type { Role } from '@/generated/prisma/enums';
+import type {
+  UserCreateInput,
+  UserUpdateInput,
+} from '@/generated/prisma/models';
 
 export type UserRepositoryPort = {
-  create: (data: Prisma.UserCreateInput) => Promise<User>;
+  create: (data: UserCreateInput) => Promise<User>;
   findByRegistration: (
     registration: string,
     options?: {
@@ -20,4 +25,6 @@ export type UserRepositoryPort = {
       role?: Role;
     },
   ) => Promise<User | null>;
+  findAll: (options?: { role?: Role }) => Promise<User[]>;
+  update: (id: number, data: UserUpdateInput) => Promise<User>;
 };

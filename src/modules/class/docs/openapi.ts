@@ -8,6 +8,8 @@ import { ClassCodeQueryDto } from '../dto/class-code-query.dto';
 import { ClassIdParameterDto } from '../dto/class-id-params.dto';
 import { ClassResponseDto } from '../dto/class-response.dto';
 import { CreateClassDto } from '../dto/create-class.dto';
+import { AssignMonitorRequestDto } from '../dto/request/assign-monitor-request.dto';
+import { AssignMonitorResponseDto } from '../dto/response/assign-monitor-response.dto';
 import { UpdateClassDto } from '../dto/update-class.dto';
 
 extendZodWithOpenApi(z);
@@ -40,6 +42,16 @@ const ClassResponseSchema = registry.register(
 const ClassListResponseSchema = registry.register(
   'ClassListResponseDto',
   z.array(ClassResponseSchema),
+);
+
+const AssignMonitorRequestSchema = registry.register(
+  'AssignMonitorRequestDto',
+  AssignMonitorRequestDto,
+);
+
+const AssignMonitorResponseSchema = registry.register(
+  'AssignMonitorResponseDto',
+  AssignMonitorResponseDto,
 );
 
 registry.registerPath({
@@ -199,6 +211,39 @@ registry.registerPath({
     },
     409: {
       description: 'Class is in use by a lesson.',
+      content: { 'application/json': { schema: ApiErrorResponseSchema } },
+    },
+  },
+});
+
+registry.registerPath({
+  method: 'put',
+  path: '/class/{id}/monitor',
+  tags: ['Class'],
+  summary: 'Assign monitor to class',
+  description: 'Vincula um monitor a uma turma (somente ADMIN).',
+  security: [{ bearerAuth: [] }],
+  request: {
+    params: ClassIdParameterSchema,
+    body: {
+      content: {
+        'application/json': {
+          schema: AssignMonitorRequestSchema,
+        },
+      },
+    },
+  },
+  responses: {
+    200: {
+      description: 'Monitor assigned successfully.',
+      content: { 'application/json': { schema: AssignMonitorResponseSchema } },
+    },
+    400: {
+      description: 'Invalid payload or parameter.',
+      content: { 'application/json': { schema: ApiErrorResponseSchema } },
+    },
+    404: {
+      description: 'Class or monitor not found.',
       content: { 'application/json': { schema: ApiErrorResponseSchema } },
     },
   },

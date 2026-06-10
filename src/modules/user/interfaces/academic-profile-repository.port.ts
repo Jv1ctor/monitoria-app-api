@@ -9,4 +9,15 @@ export type AcademicProfileRepositoryPort = {
       role?: Role;
     },
   ) => Promise<AcademicProfile | null>;
+  findByUserIdWithClasses: (
+    userId: number,
+    options?: {
+      role?: Role;
+    },
+  ) => Promise<
+    | (AcademicProfile & {
+        classes: Array<{ id: number; code: string; subject_id: number }>;
+      })
+    | null
+  >;
 };

@@ -3,6 +3,7 @@ import type { AcademicProfileRepositoryPort } from '@/modules/user/interfaces/ac
 
 import type { ClassRepositoryPort } from '../interfaces/class-repository.port';
 import type { ClassServicePort } from '../interfaces/class-service.port';
+import { assignMonitor } from './core/assign-monitor.core';
 import { create } from './core/create.core';
 import { findAll } from './core/find-all.core';
 import { findByCode } from './core/find-by-code.core';
@@ -21,4 +22,5 @@ export const classService = (deps: {
   findByCode: findByCode(deps),
   update: update(deps),
   remove: remove(deps),
+  assignMonitor: assignMonitor(deps),
 });

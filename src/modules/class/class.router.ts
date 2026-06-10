@@ -44,3 +44,9 @@ classRouter.delete(
   authorizatorMiddleware(['ADMIN']),
   controller.remove,
 );
+classRouter.put(
+  '/:id/monitor',
+  authenticator,
+  authorizatorMiddleware(['ADMIN']),
+  controller.assignMonitor,
+);

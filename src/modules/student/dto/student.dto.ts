@@ -1,6 +1,6 @@
 import type { Role } from '@/generated/prisma/enums';
 
-export type UserDto = {
+export type StudentDto = {
   id: number;
   registration: string;
   email: string;

@@ -1,5 +1,6 @@
 import type { ClassDto } from '../dto/class.dto';
 import type { CreateClassDto } from '../dto/create-class.dto';
+import type { AssignMonitorRequestDto } from '../dto/request/assign-monitor-request.dto';
 import type { UpdateClassDto } from '../dto/update-class.dto';
 
 export type ClassServicePort = {
@@ -9,4 +10,8 @@ export type ClassServicePort = {
   findAll(): Promise<ClassDto[]>;
   update(id: number, input: UpdateClassDto): Promise<ClassDto>;
   remove(id: number): Promise<ClassDto>;
+  assignMonitor(
+    classId: number,
+    input: AssignMonitorRequestDto,
+  ): Promise<ClassDto>;
 };
