@@ -4,9 +4,8 @@ export type UserDto = {
   id: number;
   registration: string;
   email: string;
-  firstName: string;
-  lastName: string;
-  majorId: number;
+  first_name: string;
+  last_name: string;
   role: Role;
   createdAt: Date;
 };

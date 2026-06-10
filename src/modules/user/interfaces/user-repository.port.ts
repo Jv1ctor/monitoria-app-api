@@ -1,4 +1,5 @@
-import type { Prisma, Role, User } from '@/generated/prisma/browser';
+import type { Prisma, User } from '@/generated/prisma/browser';
+import type { Role } from '@/generated/prisma/enums';
 
 export type UserRepositoryPort = {
   create: (data: Prisma.UserCreateInput) => Promise<User>;
