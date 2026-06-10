@@ -2,6 +2,7 @@ import { Router } from 'express';
 
 import { majorRepository } from '../major/repository';
 import { studentService } from '../student/service';
+import { subjectRepository } from '../subject/repository';
 import { academicProfileRepository } from '../user/repository/academic-profile';
 import { userRepository } from '../user/repository/user';
 import { authController } from './controller';
@@ -12,8 +13,14 @@ export const authRouter = Router();
 const userRepo = userRepository;
 const majorRepo = majorRepository;
 const profileRepo = academicProfileRepository;
+const subjectRepo = subjectRepository;
 
-const student = studentService({ majorRepo, userRepo, profileRepo });
+const student = studentService({
+  majorRepo,
+  userRepo,
+  profileRepo,
+  subjectRepo,
+});
 
 const controller = authController({
   authService: authService({ userRepo, studentService: student }),
