@@ -7,6 +7,8 @@ import '@/modules/subject/docs/openapi';
 import '@/modules/frequencys/docs/openapi';
 import '@/modules/student/docs/openapi';
 import '@/modules/user/docs/openapi';
+import '@/modules/rating/docs/openapi';
+import 'dotenv/config';
 
 import {
   extendZodWithOpenApi,
@@ -32,7 +34,7 @@ export const generateOpenAPI = () => {
 
     servers: [
       {
-        url: 'http://localhost:3001/api/v1/',
+        url: `http://localhost:${process.env.PORT_API || '3000'}/api/v1/`,
       },
     ],
   });

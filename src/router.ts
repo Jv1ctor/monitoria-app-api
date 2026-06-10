@@ -7,6 +7,7 @@ import { frequencysRouter } from './modules/frequencys/frequencys.router';
 import { lessonRouter } from './modules/lesson/lesson.router';
 import { majorRouter } from './modules/major/major.router';
 import { studentRouter } from './modules/student/student.router';
+import { ratingRouter } from './modules/rating/rating.router';
 import { subjectRouter } from './modules/subject/subject.router';
 import { userRouter } from './modules/user/user.router';
 
@@ -21,3 +22,4 @@ router.use('/subject', subjectRouter);
 router.use('/class', classRouter);
 router.use('/lesson', lessonRouter);
 router.use('/frequencys', frequencysRouter);
+router.use('/rating', ratingRouter);
