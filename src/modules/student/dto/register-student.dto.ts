@@ -5,7 +5,7 @@ export const RegisterStudantDto = z.object({
   password: z.string(),
   email: z.email(),
   first_name: z.string(),
-  major_id: z.int().positive(),
+  major_name: z.string().nonempty(),
   last_name: z.string(),
 });
 
