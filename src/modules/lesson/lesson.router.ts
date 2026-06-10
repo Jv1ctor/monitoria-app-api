@@ -44,6 +44,12 @@ lessonRouter.get(
   controller.findByClassId,
 );
 lessonRouter.get(
+  '/enrolled',
+  authenticator,
+  authorizatorMiddleware(['STUDENT']),
+  controller.findEnrolled,
+);
+lessonRouter.get(
   '/:id',
   authenticator,
   authorizatorMiddleware(['ADMIN', 'STUDENT', 'MONITOR']),
@@ -64,12 +70,12 @@ lessonRouter.delete(
 lessonRouter.post(
   '/:id/enroll',
   authenticator,
-  authorizatorMiddleware(['ADMIN', 'STUDENT', 'MONITOR']),
+  authorizatorMiddleware(['STUDENT']),
   controller.enroll,
 );
 lessonRouter.delete(
   '/:id/enroll',
   authenticator,
-  authorizatorMiddleware(['ADMIN', 'STUDENT', 'MONITOR']),
+  authorizatorMiddleware(['STUDENT']),
   controller.leave,
 );

@@ -89,7 +89,6 @@ model Class {
   created_at  DateTime        @default(now())
   documents   Documents[]
   lessons     Lesson[]
-  lessonUsers LessonUser[]
   topics      Topics[]
 
   @@unique([monitor_id, code])
@@ -123,13 +122,14 @@ model Lesson {
   class_id    Int
   class       Class        @relation(fields: [class_id], references: [id])
   frequencys  Frequencys[]
+  lessonUsers LessonUser[]
 }
 
 model LessonUser {
   id         Int             @id @default(autoincrement())
-  class_id   Int
+  lesson_id   Int
   student_id Int
-  class      Class           @relation(fields: [class_id], references: [id])
+  lesson      Lesson           @relation(fields: [lesson_id], references: [id])
   student    AcademicProfile @relation(fields: [student_id], references: [user_id])
 }
 

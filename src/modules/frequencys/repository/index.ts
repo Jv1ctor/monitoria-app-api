@@ -19,7 +19,7 @@ export const frequencysRepository: FrequencysRepositoryPort = {
   remove,
   isEnrolled: async (classId: number, studentId: number) => {
     const found = await prisma.lessonUser.findFirst({
-      where: { class_id: classId, student_id: studentId },
+      where: { lesson: { class_id: classId }, student_id: studentId },
     });
     return found !== null;
   },

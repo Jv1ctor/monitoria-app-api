@@ -1,12 +1,11 @@
+import type { Role } from '@/generated/prisma/enums';
 import type { FrequencysResponseDto } from '@/modules/frequencys/dto/response/frequencys-response.dto';
 import type { FrequencysRepositoryPort } from '@/modules/frequencys/interfaces/frequencys-repository.port';
 import type { UserRepositoryPort } from '@/modules/user/interfaces/user-repository.port';
 import { prisma } from '@/shared/database/prisma';
 import { ConflictError } from '@/shared/handle-error/errors/conflict.error';
-import { ForbiddenError } from '@/shared/handle-error/errors/forbidden.error';
 import { NotFoundError } from '@/shared/handle-error/errors/not-found.error';
 
-import type { EnrollLessonRequestDto } from '../../dto/enroll-lesson-request.dto';
 import type { LessonRepositoryPort } from '../../interfaces/lesson-repository.port';
 import type { LessonUserRepositoryPort } from '../../interfaces/lesson-user-repository.port';
 
@@ -19,36 +18,16 @@ export const enroll =
   }) =>
   async (
     lessonId: number,
-    input: EnrollLessonRequestDto,
-    user: { id: number; role: 'STUDENT' | 'MONITOR' | 'ADMIN' },
+    user: { id: number; role: Role },
   ): Promise<{ lesson_user_id: number; frequencys: FrequencysResponseDto }> => {
-    const { lessonRepo, lessonUserRepo, frequencysRepo, userRepo } = deps;
+    const { lessonRepo, lessonUserRepo, frequencysRepo } = deps;
 
     const lesson = await lessonRepo.findById(lessonId);
     if (!lesson) {
       throw new NotFoundError({ message: 'Aula nao encontrada' });
     }
 
-    if (user.role === 'STUDENT' && user.id !== input.student_id) {
-      throw new ForbiddenError({
-        message: 'Aluno so pode se inscrever a si mesmo',
-      });
-    }
-
-    const student = await userRepo.findById(input.student_id);
-    if (!student) {
-      throw new NotFoundError({ message: 'Aluno nao encontrado' });
-    }
-    if (student.role !== 'STUDENT') {
-      throw new ForbiddenError({
-        message: 'Alvo nao e um estudante',
-      });
-    }
-
-    const existing = await lessonUserRepo.findUnique(
-      lesson.class_id,
-      input.student_id,
-    );
+    const existing = await lessonUserRepo.findUnique(lesson.class_id, user.id);
     if (existing) {
       throw new ConflictError({
         message: 'Aluno ja inscrito nesta aula',
@@ -58,13 +37,13 @@ export const enroll =
     const result = await prisma.$transaction(async tx => {
       const lessonUser = await tx.lessonUser.create({
         data: {
-          class_id: lesson.class_id,
-          student_id: input.student_id,
+          lesson_id: lesson.id,
+          student_id: user.id,
         },
       });
       const frequencys = await tx.frequencys.create({
         data: {
-          student_id: input.student_id,
+          student_id: user.id,
           lesson_id: lessonId,
           status: 'PENDING',
           value: false,

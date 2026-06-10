@@ -2,7 +2,6 @@ import type { Request, Response } from 'express';
 
 import { BadRequestError } from '@/shared/handle-error/errors/bad-request.error';
 
-import { EnrollLessonRequestDto } from '../../dto/enroll-lesson-request.dto';
 import { LessonIdParameterDto } from '../../dto/lesson-id-params.dto';
 import type { LessonServicePort } from '../../interfaces/lesson-service.port';
 
@@ -21,22 +20,11 @@ export const leave =
       });
     }
 
-    const parsedBody = await EnrollLessonRequestDto.safeParseAsync(
-      request.body,
-    );
-    if (!parsedBody.success) {
-      throw new BadRequestError({
-        message: 'erro de validacao',
-        error: parsedBody.error,
-      });
-    }
-
     const user = request.user!;
-    const result = await lessonService.leave(
-      parsedParams.data.id,
-      parsedBody.data,
-      { id: user.id, role: user.role },
-    );
+    const result = await lessonService.leave(parsedParams.data.id, {
+      id: user.id,
+      role: user.role,
+    });
 
     response.status(200).json(result);
   };

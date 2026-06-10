@@ -6,6 +6,6 @@ export const findUnique = async (
   studentId: number,
 ): Promise<LessonUser | null> => {
   return prisma.lessonUser.findFirst({
-    where: { class_id: classId, student_id: studentId },
+    where: { lesson: { class_id: classId }, student_id: studentId },
   });
 };

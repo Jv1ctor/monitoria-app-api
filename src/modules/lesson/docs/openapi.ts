@@ -5,7 +5,6 @@ import { registry } from '@/shared/docs/registry';
 import { ApiErrorResponseSchema } from '@/shared/docs/schemas/api-error.schema';
 
 import { CreateLessonDto } from '../dto/create-lesson.dto';
-import { EnrollLessonRequestDto } from '../dto/enroll-lesson-request.dto';
 import { LessonClassQueryDto } from '../dto/lesson-class-query.dto';
 import { LessonIdParameterDto } from '../dto/lesson-id-params.dto';
 import { LessonResponseDto } from '../dto/lesson-response.dto';
@@ -41,11 +40,6 @@ const LessonResponseSchema = registry.register(
 const LessonListResponseSchema = registry.register(
   'LessonListResponseDto',
   z.array(LessonResponseSchema),
-);
-
-const EnrollLessonRequestSchema = registry.register(
-  'EnrollLessonRequestDto',
-  EnrollLessonRequestDto,
 );
 
 registry.registerPath({
@@ -288,11 +282,6 @@ registry.registerPath({
   security: [{ bearerAuth: [] }],
   request: {
     params: LessonIdParameterSchema,
-    body: {
-      content: {
-        'application/json': { schema: EnrollLessonRequestSchema },
-      },
-    },
   },
   responses: {
     201: {
@@ -327,11 +316,6 @@ registry.registerPath({
   security: [{ bearerAuth: [] }],
   request: {
     params: LessonIdParameterSchema,
-    body: {
-      content: {
-        'application/json': { schema: EnrollLessonRequestSchema },
-      },
-    },
   },
   responses: {
     200: {
@@ -348,6 +332,42 @@ registry.registerPath({
     404: {
       description: 'Lesson or enrollment not found.',
       content: { 'application/json': { schema: ApiErrorResponseSchema } },
+    },
+  },
+});
+
+registry.registerPath({
+  method: 'get',
+  path: '/lesson/enrolled',
+  tags: ['Lesson'],
+  summary: 'Find enrolled lessons',
+  description:
+    'Returns all lessons the authenticated student is enrolled in. Only STUDENT role can access.',
+  security: [{ bearerAuth: [] }],
+  responses: {
+    200: {
+      description: 'Enrolled lessons returned successfully.',
+      content: {
+        'application/json': {
+          schema: LessonListResponseSchema,
+        },
+      },
+    },
+    401: {
+      description: 'Unauthorized.',
+      content: {
+        'application/json': {
+          schema: ApiErrorResponseSchema,
+        },
+      },
+    },
+    403: {
+      description: 'Insufficient permissions.',
+      content: {
+        'application/json': {
+          schema: ApiErrorResponseSchema,
+        },
+      },
     },
   },
 });
