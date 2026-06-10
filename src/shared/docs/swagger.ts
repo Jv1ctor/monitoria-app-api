@@ -5,6 +5,7 @@ import '@/modules/lesson/docs/openapi';
 import '@/modules/major/docs/openapi';
 import '@/modules/subject/docs/openapi';
 import '@/modules/frequencys/docs/openapi';
+import '@/modules/rating/docs/openapi';
 import 'dotenv/config';
 
 import {

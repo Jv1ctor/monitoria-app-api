@@ -6,5 +6,9 @@ export type LessonUserRepositoryPort = {
     classId: number,
     studentId: number,
   ) => Promise<LessonUser | null>;
+  findStudentEnrollment: (
+    monitorId: number,
+    studentId: number,
+  ) => Promise<LessonUser | null>;
   remove: (id: number) => Promise<LessonUser>;
 };
