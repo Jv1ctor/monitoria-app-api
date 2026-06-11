@@ -14,5 +14,19 @@ export const findAll =
       monitor_id: classEntity.monitor_id,
       subject_id: classEntity.subject_id,
       createdAt: classEntity.created_at,
+      subject: classEntity.subject
+        ? {
+            id: classEntity.subject.id,
+            name: classEntity.subject.name,
+            code: classEntity.subject.code,
+          }
+        : undefined,
+      monitor: classEntity.monitor?.user
+        ? {
+            id: classEntity.monitor.user.id,
+            first_name: classEntity.monitor.user.first_name,
+            last_name: classEntity.monitor.user.last_name,
+          }
+        : undefined,
     }));
   };
