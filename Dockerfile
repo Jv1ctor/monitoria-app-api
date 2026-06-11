@@ -13,4 +13,4 @@ COPY . .
 RUN pnpm prisma:generate
 RUN pnpm build
 
-CMD ["sh", "-c", "pnpm prisma:migrate:deploy && node dist/server.js"]
+CMD ["sh", "-c", "pnpm prisma:migrate:deploy && pnpm prisma:seed && node dist/server.js"]
