@@ -27,12 +27,21 @@ export const enroll =
       throw new NotFoundError({ message: 'Aula nao encontrada' });
     }
 
-    const existing = await lessonUserRepo.findUnique(lesson.class_id, user.id);
+    const existing = await lessonUserRepo.findUnique(
+      lessonId,
+      lesson.class_id,
+      user.id,
+    );
     if (existing) {
       throw new ConflictError({
         message: 'Aluno ja inscrito nesta aula',
       });
     }
+
+    const existingFrequency = await frequencysRepo.findByStudentAndLesson(
+      user.id,
+      lessonId,
+    );
 
     const result = await prisma.$transaction(async tx => {
       const lessonUser = await tx.lessonUser.create({
@@ -41,14 +50,25 @@ export const enroll =
           student_id: user.id,
         },
       });
-      const frequencys = await tx.frequencys.create({
-        data: {
-          student_id: user.id,
-          lesson_id: lessonId,
-          status: 'PENDING',
-          value: false,
-        },
-      });
+
+      const frequencys = existingFrequency
+        ? await tx.frequencys.update({
+            where: { id: existingFrequency.id },
+            data: {
+              status: 'PENDING',
+              value: false,
+              unbound_at: undefined,
+            },
+          })
+        : await tx.frequencys.create({
+            data: {
+              student_id: user.id,
+              lesson_id: lessonId,
+              status: 'PENDING',
+              value: false,
+            },
+          });
+
       return { lessonUser, frequencys };
     });
 

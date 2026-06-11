@@ -15,5 +15,18 @@ export const findByClassId =
       description: lesson.description,
       class_id: lesson.class_id,
       createdAt: lesson.created_at,
+      class: lesson.class
+        ? {
+            id: lesson.class.id,
+            code: lesson.class.code,
+            monitor: lesson.class.monitor?.user
+              ? {
+                  id: lesson.class.monitor.user.id,
+                  first_name: lesson.class.monitor.user.first_name,
+                  last_name: lesson.class.monitor.user.last_name,
+                }
+              : undefined,
+          }
+        : undefined,
     }));
   };

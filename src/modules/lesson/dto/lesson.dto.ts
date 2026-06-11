@@ -5,4 +5,10 @@ export type LessonDto = {
   description: string | null;
   class_id: number;
   createdAt: Date;
+  class?: {
+    id: number;
+    code: string;
+    subject?: { id: number; name: string };
+    monitor?: { id: number; first_name: string; last_name: string };
+  };
 };
