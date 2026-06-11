@@ -1,4 +1,17 @@
 services:
+  api:
+    container_name: monitor-api
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+    env_file:
+      - ./.env
+    ports:
+      - "${PORT_API}:${PORT_API}"
+    depends_on:
+      - db
+
   db:
     container_name: monitor-db
     image: postgres:16-alpine

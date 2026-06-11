@@ -1,6 +1,6 @@
 import type { FrequencysRepositoryPort } from '@/modules/frequencys/interfaces/frequencys-repository.port';
-import { NotFoundError } from '@/shared/handle-error/errors/not-found.error';
 import { prisma } from '@/shared/database/prisma';
+import { NotFoundError } from '@/shared/handle-error/errors/not-found.error';
 
 import type { LessonRepositoryPort } from '../../interfaces/lesson-repository.port';
 import type { LessonUserRepositoryPort } from '../../interfaces/lesson-user-repository.port';
@@ -22,12 +22,19 @@ export const leave =
       throw new NotFoundError({ message: 'Aula nao encontrada' });
     }
 
-    const existing = await lessonUserRepo.findUnique(lessonId, lesson.class_id, user.id);
+    const existing = await lessonUserRepo.findUnique(
+      lessonId,
+      lesson.class_id,
+      user.id,
+    );
     if (!existing) {
       throw new NotFoundError({ message: 'Aluno nao inscrito nesta aula' });
     }
 
-    const frequencys = await frequencysRepo.findByStudentAndLesson(user.id, lessonId);
+    const frequencys = await frequencysRepo.findByStudentAndLesson(
+      user.id,
+      lessonId,
+    );
 
     await prisma.$transaction(async tx => {
       await tx.lessonUser.delete({ where: { id: existing.id } });
