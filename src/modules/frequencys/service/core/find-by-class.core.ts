@@ -50,6 +50,12 @@ export const findByClass =
           createdAt: frequencys.created_at.toISOString(),
           unboundAt: frequencys.unbound_at?.toISOString() ?? undefined,
           enrolled,
+          student: {
+            id: frequencys.student.user.id,
+            first_name: frequencys.student.user.first_name,
+            last_name: frequencys.student.user.last_name,
+            registration: frequencys.student.user.registration,
+          },
         };
       }),
     );

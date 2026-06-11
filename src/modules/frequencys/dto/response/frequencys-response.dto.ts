@@ -19,6 +19,22 @@ export const FrequencysResponseDto = z.object({
     .optional()
     .openapi({ example: '2026-06-05T03:20:00.000Z' }),
   enrolled: z.boolean().openapi({ example: true }),
+  student: z
+    .object({
+      id: z.number().int().positive(),
+      first_name: z.string(),
+      last_name: z.string(),
+      registration: z.string(),
+    })
+    .optional()
+    .openapi({
+      example: {
+        id: 5,
+        first_name: 'Maria',
+        last_name: 'Silva',
+        registration: '2422074',
+      },
+    }),
   lesson: z
     .object({
       id: z.number().int().positive(),

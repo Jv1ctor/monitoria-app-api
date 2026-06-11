@@ -1,10 +1,21 @@
 import type { Frequencys, Prisma } from '@/generated/prisma/browser';
 
+export type FrequencysWithStudent = Frequencys & {
+  student: {
+    user: {
+      id: number;
+      first_name: string;
+      last_name: string;
+      registration: string;
+    };
+  };
+};
+
 export type FrequencysRepositoryPort = {
   create: (data: Prisma.FrequencysUncheckedCreateInput) => Promise<Frequencys>;
   findById: (id: number) => Promise<Frequencys | null>;
-  findByLesson: (lessonId: number) => Promise<Frequencys[]>;
-  findByClass: (classId: number) => Promise<Frequencys[]>;
+  findByLesson: (lessonId: number) => Promise<FrequencysWithStudent[]>;
+  findByClass: (classId: number) => Promise<FrequencysWithStudent[]>;
   findByStudent: (studentId: number) => Promise<
     (Frequencys & {
       lesson: {
