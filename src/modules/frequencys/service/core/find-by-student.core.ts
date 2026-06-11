@@ -39,11 +39,15 @@ export const findByStudent =
     if (user.role === 'MONITOR') {
       const allowed: typeof frequencysList = [];
       for (const f of frequencysList) {
-        const lesson = await lessonRepo.findById(f.lesson_id);
-        if (!lesson) continue;
-        const cls = await classRepo.findById(lesson.class_id);
-        if (cls && cls.monitor_id === user.id) {
+        if (f.lesson?.class && f.lesson.class.monitor?.user?.id === user.id) {
           allowed.push(f);
+        } else {
+          const lesson = await lessonRepo.findById(f.lesson_id);
+          if (!lesson) continue;
+          const cls = await classRepo.findById(lesson.class_id);
+          if (cls && cls.monitor_id === user.id) {
+            allowed.push(f);
+          }
         }
       }
       filtered = allowed;
@@ -51,7 +55,9 @@ export const findByStudent =
 
     return Promise.all(
       filtered.map(async frequencys => {
-        const lesson = await lessonRepo.findById(frequencys.lesson_id);
+        const lesson =
+          frequencys.lesson ??
+          (await lessonRepo.findById(frequencys.lesson_id));
         const classId = lesson?.class_id ?? 0;
         const enrolled = classId
           ? await frequencysRepo.isEnrolled(classId, frequencys.student_id)
@@ -65,6 +71,37 @@ export const findByStudent =
           createdAt: frequencys.created_at.toISOString(),
           unboundAt: frequencys.unbound_at?.toISOString() ?? undefined,
           enrolled,
+          lesson: frequencys.lesson
+            ? {
+                id: frequencys.lesson.id,
+                modality: frequencys.lesson.modality,
+                date_time: frequencys.lesson.date_time.toISOString(),
+                description: frequencys.lesson.description,
+                class_id: frequencys.lesson.class_id,
+                createdAt: frequencys.lesson.created_at.toISOString(),
+                class: frequencys.lesson.class
+                  ? {
+                      id: frequencys.lesson.class.id,
+                      code: frequencys.lesson.class.code,
+                      subject: frequencys.lesson.class.subject
+                        ? {
+                            id: frequencys.lesson.class.subject.id,
+                            name: frequencys.lesson.class.subject.name,
+                          }
+                        : undefined,
+                      monitor: frequencys.lesson.class.monitor?.user
+                        ? {
+                            id: frequencys.lesson.class.monitor.user.id,
+                            first_name:
+                              frequencys.lesson.class.monitor.user.first_name,
+                            last_name:
+                              frequencys.lesson.class.monitor.user.last_name,
+                          }
+                        : undefined,
+                    }
+                  : undefined,
+              }
+            : undefined,
         };
       }),
     );

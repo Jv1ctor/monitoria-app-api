@@ -6,6 +6,7 @@ import { findByClass } from './core/find-by-class.core';
 import { findById } from './core/find-by-id.core';
 import { findByLesson } from './core/find-by-lesson.core';
 import { findByStudent } from './core/find-by-student.core';
+import { findByStudentAndLesson } from './core/find-by-student-and-lesson.core';
 import { remove } from './core/remove.core';
 import { update } from './core/update.core';
 
@@ -15,6 +16,7 @@ export const frequencysRepository: FrequencysRepositoryPort = {
   findByLesson,
   findByClass,
   findByStudent,
+  findByStudentAndLesson,
   update,
   remove,
   isEnrolled: async (classId: number, studentId: number) => {

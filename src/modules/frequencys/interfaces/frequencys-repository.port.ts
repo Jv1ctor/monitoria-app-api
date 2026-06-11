@@ -5,7 +5,30 @@ export type FrequencysRepositoryPort = {
   findById: (id: number) => Promise<Frequencys | null>;
   findByLesson: (lessonId: number) => Promise<Frequencys[]>;
   findByClass: (classId: number) => Promise<Frequencys[]>;
-  findByStudent: (studentId: number) => Promise<Frequencys[]>;
+  findByStudent: (studentId: number) => Promise<
+    (Frequencys & {
+      lesson: {
+        id: number;
+        modality: string;
+        date_time: Date;
+        description: string | null;
+        class_id: number;
+        created_at: Date;
+        class: {
+          id: number;
+          code: string;
+          subject: { id: number; name: string } | null;
+          monitor: {
+            user: { id: number; first_name: string; last_name: string };
+          } | null;
+        } | null;
+      };
+    })[]
+  >;
+  findByStudentAndLesson: (
+    studentId: number,
+    lessonId: number,
+  ) => Promise<Frequencys | null>;
   update: (
     id: number,
     data: Prisma.FrequencysUpdateInput,
